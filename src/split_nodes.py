@@ -1,4 +1,5 @@
-from text_node import TextNode, TextType
+from split_nodes_delimiter import split_nodes_delimiter
+from textnode import TextNode, TextType
 from markdown_parser import extract_markdown_links, extract_markdown_images
 
 def split_nodes_link(old_nodes):
@@ -78,3 +79,21 @@ def split_nodes_image(old_nodes):
             new_nodes.append(TextNode(remaining_text, TextType.TEXT))
 
     return new_nodes
+
+
+def text_to_textnodes(text):
+
+    if not text:
+        return [TextNode("", TextType.TEXT)]
+    # Start with a single text node
+    nodes = [TextNode(text, TextType.TEXT)]
+    
+    # Apply each splitting function in sequence
+    # The order matters here!
+    nodes = split_nodes_delimiter(nodes, "**", TextType.BOLD)
+    nodes = split_nodes_delimiter(nodes, "_", TextType.ITALIC)
+    nodes = split_nodes_delimiter(nodes, "`", TextType.CODE)
+    nodes = split_nodes_image(nodes)
+    nodes = split_nodes_link(nodes)
+    
+    return nodes

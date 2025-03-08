@@ -2,7 +2,35 @@ import unittest
 
 from textnode import TextNode, TextType
 from markdown_parser import extract_markdown_images, extract_markdown_links
+from split_nodes import text_to_textnodes
 
+class TestTextToTextNodes(unittest.TestCase):
+    def test_text_to_textnodes(self):
+        text = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
+        nodes = text_to_textnodes(text)
+        expected = [
+            TextNode("This is ", TextType.TEXT),
+            TextNode("text", TextType.BOLD),
+            TextNode(" with an ", TextType.TEXT),
+            TextNode("italic", TextType.ITALIC),
+            TextNode(" word and a ", TextType.TEXT),
+            TextNode("code block", TextType.CODE),
+            TextNode(" and an ", TextType.TEXT),
+            TextNode("obi wan image", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
+            TextNode(" and a ", TextType.TEXT),
+            TextNode("link", TextType.LINK, "https://boot.dev"),
+        ]
+        self.assertEqual(len(expected), len(nodes))
+        for i in range(len(expected)):
+            self.assertEqual(expected[i].text, nodes[i].text)
+            self.assertEqual(expected[i].text_type, nodes[i].text_type)
+            self.assertEqual(expected[i].url, nodes[i].url)
+
+    def test_empty_text(self):
+        nodes = text_to_textnodes("")
+        self.assertEqual(1, len(nodes))
+        self.assertEqual("", nodes[0].text)
+        self.assertEqual(TextType.TEXT, nodes[0].text_type)
 class TestTextNode(unittest.TestCase):
     def test_eq(self):
         node = TextNode("This is a text node", TextType.BOLD)
@@ -58,5 +86,10 @@ class TestMarkdownExtraction(unittest.TestCase):
         "This has a ![image](https://example.com/img.jpg) and a [link](https://example.com)"
         )
         self.assertListEqual([("link", "https://example.com")], matches)
+
+
+
+
+    
 if __name__ == "__main__":
     unittest.main()
