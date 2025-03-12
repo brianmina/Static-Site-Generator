@@ -26,3 +26,21 @@ class TextNode:
     def __repr__(self):
         # Return string representation
         return f"TextNode({self.text}, {self.text_type.value}, {self.url})"
+
+    def to_html(self):
+        # For text nodes, we need to handle the different text types
+        if self.text_type == TextType.TEXT:
+            return self.text
+        elif self.text_type == TextType.BOLD:
+            return f"<b>{self.text}</b>"
+        elif self.text_type == TextType.ITALIC:
+            return f"<i>{self.text}</i>"
+        elif self.text_type == TextType.CODE:
+            return f"<code>{self.text}</code>"
+        elif self.text_type == TextType.LINK:
+            # Assuming the URL is stored in the text itself
+            # You might need to adjust this based on your implementation
+            return f"<a href=\"{self.url}\">{self.text}</a>"
+        else:
+            # Default case
+            return self.text

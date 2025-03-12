@@ -1,6 +1,6 @@
 from extract_title import extract_title
 import os
-from markdown_parser import markdown_to_html_node
+from markdown_to_html_node import markdown_to_html_node
 
 
 def generate_page(from_path, template_path, dest_path):
