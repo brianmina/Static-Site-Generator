@@ -12,10 +12,10 @@ class TestExtractTitle(unittest.TestCase):
         self.assertEqual(extract_title("#    Lots of Space    "), "Lots of Space")
         
     def test_title_in_multiline_markdown(self):
-    markdown = """Some text before
+        markdown = """Some text before
 # The Actual Title
 Some text after"""
-    self.assertEqual(extract_title(markdown), "The Actual Title")
+        self.assertEqual(extract_title(markdown), "The Actual Title")
         
     def test_no_title_raises_exception(self):
         with self.assertRaises(Exception):
