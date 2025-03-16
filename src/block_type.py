@@ -41,9 +41,9 @@ def block_to_block_type(block):
     
     # Check for quote block (every line starts with >)
     lines = block.split('\n')
-    if all(line.startswith('> ') for line in lines):
+    # Check for quote block (first line starts with >)
+    if lines and lines[0].strip().startswith('>'):
         return BlockType.QUOTE
-    
     # Check for unordered list (every line starts with -)
     
     if all(line.startswith('- ') for line in lines):

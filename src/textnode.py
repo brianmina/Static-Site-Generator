@@ -41,6 +41,8 @@ class TextNode:
             # Assuming the URL is stored in the text itself
             # You might need to adjust this based on your implementation
             return f"<a href=\"{self.url}\">{self.text}</a>"
+        elif self.text_type == TextType.IMAGE:
+            return f"<img src=\"{self.url}\" alt=\"{self.text}\" />"
         else:
             # Default case
             return self.text

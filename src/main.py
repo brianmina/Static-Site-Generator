@@ -6,16 +6,30 @@ from copy_static import copy_static
 import os
 
 def main():
-    # Paths for your static and public directories
-    static_path = "static"
-    public_path = "public"
+    # Get the directory of the script
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    # Get the root directory (one level up from script_dir)
+    root_dir = os.path.dirname(script_dir)
+
+    # Update paths to be relative to the root directory
+    static_path = os.path.join(root_dir, "static")
+    public_path = os.path.join(root_dir, "public")
+    from_path = os.path.join(root_dir, "content/index.md")
+    template_path = os.path.join(root_dir, "template.html")
+
+    # Delete and recreate the public directory
+    if os.path.exists(public_path):
+        # Use shutil to remove directory and all contents
+        import shutil
+        shutil.rmtree(public_path)
+    
+    # Create the public directory
+    os.makedirs(public_path, exist_ok=True)
     
     # Copy static files to public directory
     copy_static(static_path, public_path)
     
     # Generate the main page
-    from_path = "content/index.md"
-    template_path = "template.html"
     dest_path = os.path.join(public_path, "index.html")
     
     generate_page(from_path, template_path, dest_path)
