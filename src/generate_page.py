@@ -3,7 +3,7 @@ import os
 from markdown_to_html_node import markdown_to_html_node
 
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, basepath):
     """
     Generate an HTML page from a markdown file using a template.
     
@@ -32,6 +32,10 @@ def generate_page(from_path, template_path, dest_path):
     # Replace placeholders in the template
     final_html = template_content.replace("{{ Title }}", title).replace("{{ Content }}", html_content)
     
+     # Replace href and src attributes to use the base path
+    final_html = final_html.replace('href="/', f'href="{basepath}')
+    final_html = final_html.replace('src="/', f'src="{basepath}')
+
     # Create directory if it doesn't exist
     os.makedirs(os.path.dirname(dest_path), exist_ok=True)
     
@@ -41,7 +45,7 @@ def generate_page(from_path, template_path, dest_path):
 
 
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath):
     """
     Recursively generate HTML pages from markdown files
     """
@@ -60,7 +64,7 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
             os.makedirs(new_dest_dir, exist_ok=True)
             
             # Recursive call with updated paths
-            generate_pages_recursive(entry_path, template_path, new_dest_dir)
+            generate_pages_recursive(entry_path, template_path, new_dest_dir, basepath)
         
         # If it's a markdown file, process it
         elif entry.endswith(".md"):
@@ -74,4 +78,4 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
             dest_path = os.path.join(dest_dir_path, dest_file)
             
             # Generate the HTML page
-            generate_page(entry_path, template_path, dest_path)
+            generate_page(entry_path, template_path, dest_path, basepath)
